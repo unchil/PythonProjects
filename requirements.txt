@@ -1,4 +1,4 @@
-import plotly
-import numpy
-import pandas
-import time
+plotly
+numpy
+pandas
+time
