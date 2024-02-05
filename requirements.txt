@@ -1,4 +1,2 @@
+seaborn
 plotly
-numpy
-pandas
-time
