@@ -16,7 +16,6 @@ def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 
 
-
 def main():
     # read csv from a github repo
     df = get_data()
