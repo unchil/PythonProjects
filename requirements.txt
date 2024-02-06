@@ -1,1 +1,5 @@
-matplotlib
+numpy
+pandas
+time
+plotly.express
+ssl
