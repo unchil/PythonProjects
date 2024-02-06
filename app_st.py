@@ -30,7 +30,7 @@ def main():
     df = df[df['job']==job_filter]
 
     # near real-time / live feed simulation
-    for seconds in range(200):
+    for seconds in range(1):
         #while True:
         df['age_new'] = df['age'] * np.random.choice(range(1,5))
         df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
