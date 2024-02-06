@@ -1,4 +1,6 @@
 seaborn
-plotly
 pandas
 ssl
+numpy
+plotly.express
+streamlit
