@@ -7,9 +7,19 @@ import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
+
+dataset_url = "https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv"
+
+# read csv from a URL
+@st.experimental_memo
+def get_data() -> pd.DataFrame:
+    return pd.read_csv(dataset_url)
+
+
+
 def main():
     # read csv from a github repo
-    df = pd.read_csv("https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv")
+    df = get_data()
 
     st.set_page_config(
         page_title = 'Real-Time Data Science Dashboard',
