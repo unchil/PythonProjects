@@ -6,25 +6,23 @@ import plotly.express as px
 import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
+dataset_url = "https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv"
+
+@st.cache_data
+def get_data() -> pd.DataFrame:
+    return pd.read_csv(dataset_url)
 
 def main():
 
+    st.set_page_config(
+        page_title="Real-Time Data Science Dashboard",
+        page_icon="✅",
+        layout="wide",
+    )
 
-    #df = pd.read_csv("https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv")
-
-    url = "https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv"
-
-    # read csv from a URL
-    @st.cache_data
-    def get_data(dataset_url) -> pd.DataFrame:
-        return pd.read_csv(dataset_url)
-
-    df = get_data(url)
-
-
-
-    # dashboard title
     st.title("Real-Time / Live Data Science Dashboard")
+
+    df = get_data()
 
     # top-level filters
     job_filter = st.selectbox("Select the Job", pd.unique(df['job']))
@@ -36,8 +34,8 @@ def main():
     df = df[df['job']==job_filter]
 
     # near real-time / live feed simulation
-    for seconds in range(200):
-        #while True:
+  #  for seconds in range(200):
+    while True:
         df['age_new'] = df['age'] * np.random.choice(range(1,5))
         df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
 
@@ -70,7 +68,8 @@ def main():
             st.markdown("### Detailed Data View")
             st.dataframe(df)
             time.sleep(1)
-        #placeholder.empty()
+
+        placeholder.empty()
 
 if __name__ == "__main__":
     main()
