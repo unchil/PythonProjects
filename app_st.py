@@ -3,7 +3,9 @@ import numpy as np # np mean, np random
 import pandas as pd # read csv, df manipulation
 import time # to simulate a real time data, time loop
 import plotly.express as px
+import ssl
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def main():
     # read csv from a github repo
