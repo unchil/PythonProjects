@@ -1,6 +1,2 @@
-seaborn
 pandas
-ssl
 numpy
-plotly.express
-streamlit
