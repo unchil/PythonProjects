@@ -9,7 +9,7 @@ list_of_means = []
 for i in range(0, 1000):
     list_of_means.append(np.random.choice(binom_dist, 100, replace=True).mean())
 
-fig, axes_list = plt.subplots(1, 2, figsize=(8,5))
+fig, axes_list = plt.subplots(2, 2, figsize=(8,5))
 
 #fig1, ax1 = plt.subplots()
 
