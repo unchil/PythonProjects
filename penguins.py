@@ -1,7 +1,12 @@
+import time
+
 import streamlit as st
 import pandas as pd
 import altair as alt
 import seaborn as sns
+
+
+
 
 st.markdown('Use this Streamlit app to make your own scatterplot about penguins!')
 #selected_species = st.selectbox('What species would you likt to visualize?' , pd.unique(penguins_df['species']))
@@ -18,8 +23,18 @@ st.title("Palmer's Penguins")
 
 penguins_df = pd.read_csv("../Streamlit-for-Data-Science/penguin_app/penguins.csv")
 penguin_file = st.file_uploader("Select Your Local Penguins CSV(default provided)")
-if penguin_file is not None:
-    penguins_df = pd.read_csv(penguin_file)
+
+@st.cache_data()
+def load_file(penguin_file):
+    time.sleep(3)
+    if penguin_file is not None:
+        penguins_df = pd.read_csv(penguin_file)
+    else:
+        penguins_df = pd.read_csv("../Streamlit-for-Data-Science/penguin_app/penguins.csv")
+
+    return penguins_df
+
+penguins_df = load_file(penguin_file)
 
 if selected_gender == 'male penguins':
     penguins_df = penguins_df[penguins_df['sex'] == 'male']
