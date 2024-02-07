@@ -1,5 +1,4 @@
 numpy
 pandas
 altair
-plotly.express
-ssl
+plotly
