@@ -8,17 +8,9 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
-
-
-st.set_page_config(
-    page_title="Real-Time Data Science Dashboard",
-    page_icon="✅",
-    layout="wide",
-)
-
 st.title("Real-Time / Live Data Science Dashboard")
 
-dataset_url = "https://raw.githubusercontent.com/Lexie88rus/bank-marketing-analysis/master/bank.csv"
+dataset_url = "https://github.com/unchil/PythonProjects/blob/main/penguins.csv"
 
 @st.cache_data
 def get_data() -> pd.DataFrame:
@@ -26,34 +18,7 @@ def get_data() -> pd.DataFrame:
 
 df = get_data()
 
-# top-level filters
-job_filter = st.selectbox("Select the Job", pd.unique(df['job']))
 
-# creating a single-element container.
-placeholder = st.empty()
 
-# dataframe filter
-df = df[df['job']==job_filter]
-
-# near real-time / live feed simulation
-#  for seconds in range(200):
-while True:
-    df['age_new'] = df['age'] * np.random.choice(range(1,5))
-    df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
-
-    # creating KPIs
-    avg_age = np.mean(df['age_new'])
-
-    count_married = int(df[(df["marital"]=='married')]['marital'].count() + np.random.choice(range(1,30)))
-
-    balance = np.mean(df['balance_new'])
-
-    with placeholder.container():
-        # create three columns
-
-        st.markdown("### Detailed Data View")
-        st.dataframe(df)
-        time.sleep(1)
-
-    placeholder.empty()
-
+st.markdown("### Detailed Data View")
+st.dataframe(df)
