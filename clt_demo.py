@@ -13,7 +13,7 @@ for i in range(0, 1000):
 
 fig, axes_list = plt.subplots()
 
-axes_list.plot(list_of_means)
+axes_list = plt.hist(list_of_means, range=[0,1])
 
 
 st.pyplot(fig)
