@@ -11,3 +11,6 @@ for i in range(0, 1000):
 
 plt.hist(list_of_means)
 st.pyplot()
+
+plt.hist(np.ones(4))
+st.pyplot()
