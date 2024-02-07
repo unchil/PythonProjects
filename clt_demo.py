@@ -9,10 +9,12 @@ list_of_means = []
 for i in range(0, 1000):
     list_of_means.append(np.random.choice(binom_dist, 100, replace=True).mean())
 
-fig1, ax1 = plt.subplots()
-ax1 = plt.hist(list_of_means)
-st.pyplot(fig1)
+fig, axes_list = plt.subplots(1, 2, figsize=(8,5))
 
-fig2, ax2 = plt.subplots()
-ax2 = plt.hist(np.ones(4))
-st.pyplot(fig2)
+#fig1, ax1 = plt.subplots()
+axes_list[0][0] = plt.hist(list_of_means)
+#st.pyplot(fig1)
+
+#fig2, ax2 = plt.subplots()
+axes_list[0][1] = plt.hist(np.ones(4))
+st.pyplot(fig)
