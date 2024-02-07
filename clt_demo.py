@@ -2,18 +2,18 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import numpy as np
 
-binom_dist = np.random.binomial(1, .5, 1000)
+perc_heads = st.number_input(label = 'Change of Coins Landing on Heads',
+                             min_value= 0.0, max_value=1.0, value=.5 )
+
+binom_dist = np.random.binomial(1, perc_heads, 1000)
 list_of_means = []
 
 for i in range(0, 1000):
     list_of_means.append(np.random.choice(binom_dist, 100, replace=True).mean())
 
-fig, axes_list = plt.subplots(2, 1)
+fig, axes_list = plt.subplots()
 
-axes_list[0].plot(list_of_means)
+axes_list.plot(list_of_means)
 
-axes_list[1].plot(np.ones(4))
-
-#plt.show()
 
 st.pyplot(fig)
