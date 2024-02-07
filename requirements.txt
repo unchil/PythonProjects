@@ -1,4 +1,3 @@
 numpy
 pandas
-altair
-plotly
+plotly.express
