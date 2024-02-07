@@ -30,27 +30,27 @@ placeholder = st.empty()
 df = df[df['job']==job_filter]
 
 #  for seconds in range(200):
-while True:
-    df['age_new'] = df['age'] * np.random.choice(range(1,5))
-    df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
+#while True:
+df['age_new'] = df['age'] * np.random.choice(range(1,5))
+df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
 
-    avg_age = np.mean(df['age_new'])
+avg_age = np.mean(df['age_new'])
 
-    count_married = int(df[(df["marital"]=='married')]['marital'].count() + np.random.choice(range(1,30)))
+count_married = int(df[(df["marital"]=='married')]['marital'].count() + np.random.choice(range(1,30)))
 
-    balance = np.mean(df['balance_new'])
+balance = np.mean(df['balance_new'])
 
-    with placeholder.container():
-        # create three columns
-        kpi1, kpi2, kpi3 = st.columns(3)
+with placeholder.container():
+    # create three columns
+    kpi1, kpi2, kpi3 = st.columns(3)
 
-        # fill in those three columns with respective metrics or KPIs
-        kpi1.metric(label="Age ⏳", value=round(avg_age), delta= round(avg_age) - 10)
-        kpi2.metric(label="Married Count 💍", value= int(count_married), delta= - 10 + count_married)
-        kpi3.metric(label="A/C Balance ＄", value= f"$ {round(balance,2)} ", delta= - round(balance/count_married) * 100)
+    # fill in those three columns with respective metrics or KPIs
+    kpi1.metric(label="Age ⏳", value=round(avg_age), delta= round(avg_age) - 10)
+    kpi2.metric(label="Married Count 💍", value= int(count_married), delta= - 10 + count_married)
+    kpi3.metric(label="A/C Balance ＄", value= f"$ {round(balance,2)} ", delta= - round(balance/count_married) * 100)
 
 
-        time.sleep(1)
+    time.sleep(1)
 
-placeholder.empty()
+    #placeholder.empty()
 
