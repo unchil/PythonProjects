@@ -18,7 +18,7 @@ axes_list[0][0].plot(list_of_means)
 
 #fig2, ax2 = plt.subplots()
 #axes_list[0][1] = plt.hist(np.ones(4))
-axes_list[0][0].plot(np.ones(4))
+axes_list[0][1].plot(np.ones(4))
 
 plt.show()
 st.pyplot(fig)
