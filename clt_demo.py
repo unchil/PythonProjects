@@ -13,12 +13,12 @@ fig, axes_list = plt.subplots(2, 1)
 
 #fig1, ax1 = plt.subplots()
 
-axes_list[0][0].plot(list_of_means)
+axes_list[0].plot(list_of_means)
 #st.pyplot(fig1)
 
 #fig2, ax2 = plt.subplots()
 #axes_list[0][1] = plt.hist(np.ones(4))
-axes_list[1][0].plot(np.ones(4))
+axes_list[1].plot(np.ones(4))
 
 plt.show()
 st.pyplot(fig)
