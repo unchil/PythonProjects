@@ -31,7 +31,7 @@ def get_result(days_lookback):
     AND timestamp < DATETIME_TRUNC(current_timestamp(), DAY) 
     AND timestamp >= timestamp_add( DATETIME_TRUNC(current_timestamp(), DAY) , INTERVAL -({days_lookback}) DAY )
     GROUP BY date, project
-    ORDER BY date desc
+    ORDER BY date, project desc
 """
     return client.query(query).to_dataframe()
 
