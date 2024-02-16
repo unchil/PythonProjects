@@ -1,3 +1,2 @@
 streamlit
-google.oauth2
 google.cloud
