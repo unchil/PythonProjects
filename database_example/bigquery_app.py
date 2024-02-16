@@ -50,9 +50,9 @@ st.line_chart(results, x='date', y='count', color='project')
 color_map = {'streamlit':'red', 'dash':'blue', 'jupyter':'orange'}
 
 st.write("streamlit_plotly_events line chart:")
-fig1 = px.line(results, x='date', y='count', color='project', markers=True, color_discrete_map=color_map)
+fig1 = px.line(results, x="date", y="count", symbol="project", color="project", color_discrete_map=color_map, markers=True)
 event1 = plotly_events(fig1)
 
 st.write("streamlit_plotly_events area chart:")
-fig2 = px.area(results, x="date", y="count", color="project", color_discrete_map=color_map, markers=True)
+fig2 = px.area(results, x="date", y="count", symbol="project", color="project", color_discrete_map=color_map, markers=True)
 event2 = plotly_events(fig2, click_event=True)
