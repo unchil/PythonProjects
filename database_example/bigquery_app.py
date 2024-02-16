@@ -1,7 +1,8 @@
 import streamlit as st
 from google.oauth2 import service_account
 from google.cloud import bigquery
-
+from streamlit_plotly_events import plotly_events
+import plotly.express as px
 @st.cache_resource
 def get_bigquery_client():
     credentials = service_account.Credentials.from_service_account_info(
@@ -42,4 +43,16 @@ st.write("Comparing data dashboarding tools and frameworks")
 st.write(f"{days_lookback} Days Project File Downloads Count ")
 
 st.dataframe(results, height=200)
+
+st.write("streamlit line chart:")
 st.line_chart(results, x='date', y='count', color='project')
+
+color_map = {'streamlit':'red', 'dash':'blue', 'jupyter':'orange'}
+
+st.write("streamlit_plotly_events line chart:")
+fig = px.line(results, x="date", y="count", color="project", color_discrete_map=color_map, markers=True)
+plotly_events(fig, click_event=True)
+
+st.write("streamlit_plotly_events area chart:")
+fig = px.area(results, x="date", y="count", color="project", color_discrete_map=color_map, markers=True)
+plotly_events(fig, click_event=True)
