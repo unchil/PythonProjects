@@ -20,7 +20,7 @@ selected_gender = st.selectbox('What gender do you want to filter for?',
 st.title("Palmer's Penguins")
 
 
-penguins_df = pd.read_csv("penguins.csv")
+penguins_df = pd.read_csv("data/penguins.csv")
 penguin_file = st.file_uploader("Select Your Local Penguins CSV(default provided)")
 
 @st.cache_data()
@@ -29,7 +29,7 @@ def load_file(penguin_file):
     if penguin_file is not None:
         penguins_df = pd.read_csv(penguin_file)
     else:
-        penguins_df = pd.read_csv("penguins.csv")
+        penguins_df = pd.read_csv("data/penguins.csv")
 
     return penguins_df
 
