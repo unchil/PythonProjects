@@ -2,14 +2,12 @@ import streamlit as st
 from streamlit_plotly_events import plotly_events
 import plotly.express as px
 
-st.set_page_config(layout="wide")
-
+st.set_page_config(layout="centered")
 st.title("BigQuery App sample using streamlit")
-
 st.subheader("Daily download count of selected projects")
 
 """
-Client Create:
+Create Client:
 """
 with st.echo():
     from google.oauth2 import service_account
@@ -24,9 +22,14 @@ with st.echo():
 
 client = get_bigquery_client()
 
-selected_project = st.sidebar.multiselect('ProjectName', ['streamlit', 'dash', 'jupyter'], default=['streamlit', 'dash', 'jupyter'])
+selected_project = st.sidebar.multiselect(
+    label='ProjectName',
+    options=['streamlit', 'dash', 'jupyter'],
+    default=['streamlit', 'dash', 'jupyter']
+)
+
 days_lookback = st.sidebar.slider(
-    "How many days of data do you want to see?",
+    label="How many days of data do you want to see?",
     min_value=1, max_value=30, value=5
 )
 
@@ -36,7 +39,7 @@ Make Query and Execute:
 with st.echo():
     @st.cache_data
     def get_result(selected_project, days_lookback):
-        query = f"""
+        query = """
         SELECT
             CAST(timestamp AS DATE ) as date,
             file.project as project,
@@ -46,7 +49,7 @@ with st.echo():
         AND timestamp < DATETIME_TRUNC(current_timestamp(), DAY) 
         AND timestamp >= timestamp_add( DATETIME_TRUNC(current_timestamp(), DAY) , INTERVAL -(@lookback) DAY )
         GROUP BY date, project
-        ORDER BY date, project desc
+        ORDER BY date DESC , project ASC
     """
         job_config = bigquery.QueryJobConfig(
             use_query_cache=True,
