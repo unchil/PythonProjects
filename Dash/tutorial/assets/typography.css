@@ -1,0 +1,10 @@
+body {
+    width:100%;
+    height:100%;
+    justify-content: space-around;
+}
+
+.container {
+    margin:'auto';
+    padding:'20px';
+}
