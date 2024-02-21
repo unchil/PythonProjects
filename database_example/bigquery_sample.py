@@ -24,8 +24,8 @@ client = get_bigquery_client()
 
 selected_project = st.sidebar.multiselect(
     label='ProjectName',
-    options=['streamlit', 'dash', 'jupyter'],
-    default=['streamlit', 'dash', 'jupyter']
+    options=['streamlit', 'dash', 'gradio'],
+    default=['streamlit', 'dash', 'gradio']
 )
 
 days_lookback = st.sidebar.slider(
@@ -37,7 +37,6 @@ days_lookback = st.sidebar.slider(
 Make Query and Execute: 
 """
 with st.echo():
-    @st.cache_data
     def get_result(selected_project, days_lookback):
         query = """
         SELECT
@@ -52,7 +51,7 @@ with st.echo():
         ORDER BY date DESC , project ASC
     """
         job_config = bigquery.QueryJobConfig(
-            use_query_cache=True,
+            use_query_cache=False,
             query_parameters=[
                 bigquery.ArrayQueryParameter("projects", "STRING", selected_project ),
                 bigquery.ScalarQueryParameter("lookback", "INT64", days_lookback),
@@ -72,7 +71,7 @@ st.write("streamlit line chart:")
 st.line_chart(results, x='date', y='count', color='project')
 
 st.write("streamlit_plotly_events line chart:")
-color_map = {'streamlit':'red', 'dash':'blue', 'jupyter':'orange'}
+color_map = {'streamlit':'red', 'dash':'blue', 'gradio':'orange'}
 fig1 = px.line(
     data_frame=results,
     x="date",
