@@ -47,7 +47,46 @@ fig_gapminder = px.scatter(
     size_max=60,
 )
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+tab1_content = dbc.Card(
+    dbc.CardBody(
+        [
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.Label("Select year:"),
+                            dcc.Dropdown(
+                                id="year",
+                                options=df.year.unique(),
+                                value=np.sort(df.year.unique())[::-1][0].item(),
+                                clearable=False,
+                                     className='dropdown-dark'
+                            ),
+                        ],
+                        width=3,
+                    ),
+                    dbc.Col(
+                        [dcc.Graph(id="graph", figure=fig)],
+                        width=9,
+                    ),
+                ]
+            )
+        ]
+    ),
+    className="mt-3",
+)
+
+tab2_content = dbc.Card(
+    dbc.CardBody(
+        [
+            dcc.Graph(id='graph_scatter', figure=fig_gapminder)
+        ]
+    ),
+    className="mt-3",
+)
+
+
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP,  dbc.icons.FONT_AWESOME])
 
 
 app.layout = html.Div(
@@ -58,42 +97,21 @@ app.layout = html.Div(
             style={'padding':'10px'},
         ),
         color_mode_switch,
-        dcc.Tabs(
+
+        dbc.Tabs(
             [
-                dcc.Tab(
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [
-                                    html.Label("Select year:"),
-                                    dcc.Dropdown(
-                                        id="year",
-                                        options=df.year.unique(),
-                                        value=np.sort(df.year.unique())[::-1][0].item(),
-                                        clearable=False,
-                                        #     className='dropdown-dark'
-                                    ),
-                                ],
-                                width=3,
-                            ),
-                            dbc.Col(
-                                [dcc.Graph(id="graph", figure=fig)],
-                                width=9,
-                            ),
-                        ]
-                    ),
-                    label="Gapminder_Sunburst"
-                ),
-                dcc.Tab(
-                    dcc.Graph(id='graph_scatter', figure=fig_gapminder),
-                    label="Gapminder_Scatter"
-                ),
-            ]
-        )
+                dbc.Tab(tab1_content, label="Gapminder_Sunburst", tab_id="tab-1"),
+                dbc.Tab(tab2_content, label="Gapminder_Scatter", tab_id="tab-2"),
+            ],
+            id="tabs",
+            active_tab="tab-1"
+        ),
+
     ],
     id='root_container',
     className='container'
 )
+
 
 
 @app.callback(
