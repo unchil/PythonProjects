@@ -14,12 +14,10 @@ df = pd.read_csv("data/bank.csv")
 bank_file = st.file_uploader("Select Your Local CSV(default provided)")
 @st.cache_data()
 def load_file(bank_file):
-    time.sleep(3)
     if bank_file is not None:
         df = pd.read_csv(bank_file)
     else:
         df = pd.read_csv("data/bank.csv")
-
     return df
 
 st.title("Real-Time / Live Data Science Dashboard")
@@ -36,6 +34,7 @@ placeholder = st.empty()
 df = df[df['job']==job_filter]
 
 while True:
+
     df['age_new'] = df['age'] * np.random.choice(range(1,5))
     df['balance_new'] = df['balance'] * np.random.choice(range(1,5))
 
