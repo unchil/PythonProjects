@@ -1,0 +1,16 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<body>
+
+    <div id="title">
+        <h1>소비자 물가 지수</h1>
+    </div>
+
+    <div id="chart">
+        {{ data|safe }}
+    </div>
+
+
+</body>
+
