@@ -88,6 +88,8 @@ def getData(question_id):
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
+
+
 app = Dash(__name__, external_stylesheets=[ dbc.themes.BOOTSTRAP, dbc_css, dbc.icons.FONT_AWESOME])
 
 
@@ -123,20 +125,40 @@ tab2_content = dbc.Card(
     className="mt-3",
 )
 
-tab3_content = dbc.Card(
-    dbc.CardBody(
-        [
-            dash_table.DataTable(data=getData(5).to_dict('records'), page_size=15 ),
+TOT_CNT = getData(5).shape[0]
+PAGESIZE = 10
+
+
+
+tab3_content = dbc.Card( [
+    dbc.CardBody([
+            dash_table.DataTable(
+                id='data_table',
+                data=getData(5).to_dict('records'),
+                page_current=0,
+                page_size=PAGESIZE,
+                style_table={'overflowX': 'scroll'},
+            ),
         ],
         className="dbc"
     ),
-    className="mt-3",
+    dbc.CardFooter( [
+        dbc.Pagination(
+            id='pagination',
+            max_value=TOT_CNT/PAGESIZE,
+            active_page=1,
+            first_last=True,
+            previous_next=True,
+            fully_expanded=False
+        )] , style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'} )
+    ],
+
 )
 
 app.layout = html.Div(
     [
         html.Div(
-            ["소비자 물가 지수"],
+            ["서울 소비자 물가 지수"],
             id='title_div',
             style={'padding':'10px'},
         ),
@@ -162,21 +184,21 @@ app.layout = html.Div(
 )
 
 
-aa= """
-@app.callback(
-    Output("graph-1", "figure"),
-    Output("graph-2", "figure"),
-    Input("color-mode-switch", "value"),
-)
-def update_chart_template(value):
 
-    figure_bar = Patch()
-    figure_line = Patch()
-    template = pio.templates["minty"] if value else pio.templates["minty_dark"]
-    figure_bar["layout"]["template"] = template
-    figure_line["layout"]["template"] = template
-    return figure_bar, figure_line
-"""
+
+
+@app.callback(
+    Output("data_table", "data"),
+    Input('pagination', "active_page"),
+)
+def change_page(page_current):
+    page = page_current - 1
+    return getData(5).iloc[
+           page*PAGESIZE:(page + 1)*PAGESIZE
+           ].to_dict('records')
+
+
+
 
 
 
@@ -192,7 +214,8 @@ def update_chart_template(value):
             'current_tab': State('tabs', 'active_tab'),
             'current_mode': State("color-mode-switch", "value")
         }
-    }
+    },
+    prevent_initial_call=True
 )
 def update_chart(input_dict, state_dict):
     inputs = ctx.args_grouping.input_dict
