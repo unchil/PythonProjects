@@ -1,3 +1,7 @@
+import base64
+import glob
+import os
+
 import dash
 import pandas as pd
 from dash import Dash, dcc, html, dash_table, callback, Input, Output, ClientsideFunction, Patch, ctx, State
@@ -104,19 +108,36 @@ figure_bar = px.bar(
 
 figure_line = make_figure(0, True)
 
+imagePath = "/Volumes/WorkSpace/PythonProjects/Dash/tutorial/assets/*"
+svg_list = [file for file in glob.glob(imagePath) if file.endswith(".svg")]
 
-tab1_content = dbc.Card(
-    dbc.CardBody([
-        dcc.Graph(id='graph-1', figure=figure_bar)],
-    ),
-    className="mt-3",
+carousel = dbc.Carousel(
+    id="carousel",
+    items=[
+        {'key': i, 'src':url, 'header':url} for i, url in enumerate(svg_list)
+    ],
+    controls=False,
+    indicators=False,
+    interval=2000,
+    ride="carousel",
 )
 
-tab2_content = dbc.Card(
+
+
+tab1_content = dbc.Card([
+    dbc.CardBody([
+        dcc.Graph(id='graph-1', figure=figure_bar)],
+    ),],
+    className="mt-3",
+    outline=True, color="danger"
+)
+
+tab2_content = dbc.Card([
     dbc.CardBody([
         dcc.Graph(id='graph-2', figure=figure_line),]
-    ),
+    ),],
     className="mt-3",
+    outline=True, color="danger"
 )
 
 tab3_content = dbc.Card([
@@ -130,20 +151,27 @@ tab3_content = dbc.Card([
             ),],
             className="dbc"
         ),
-        dbc.CardFooter( [
-            dbc.Pagination(
-                id='pagination',
-                max_value=TOT_CNT/PAGESIZE,
-                active_page=1,
-                first_last=True,
-                previous_next=True,
-                fully_expanded=False
-            )] ,
-            style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'}
-        )
-    ],
-)
+    dbc.CardFooter( [
+        dbc.Pagination(
+            id='pagination',
+            max_value=TOT_CNT/PAGESIZE,
+            active_page=1,
+            first_last=True,
+            previous_next=True,
+            fully_expanded=False
+        )] ,
+        style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'}
+    )
+],outline=True, color="danger")
 
+
+tab4_content = dbc.Card([
+    dbc.CardBody([
+        carousel
+         ],
+        className="dbc"
+    ),
+],  style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'} )
 
 
 app = Dash(__name__, external_stylesheets=[ dbc.themes.BOOTSTRAP, dbc_css, dbc.icons.FONT_AWESOME])
@@ -166,6 +194,7 @@ app.layout = html.Div([
                 dbc.Tab(tab1_content, label="Animation Bar Chart", tab_id="tab-1"),
                 dbc.Tab(tab2_content, label="Line Chart", tab_id="tab-2"),
                 dbc.Tab(tab3_content, label="Data Sheet", tab_id="tab-3"),
+             #   dbc.Tab(tab4_content, label='Carousel', tab_id="tab-4"),
             ],
             id="tabs",
             active_tab="tab-1"
