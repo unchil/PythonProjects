@@ -6,9 +6,12 @@ import dash
 import pandas as pd
 from dash import Dash, dcc, html, dash_table, callback, Input, Output, ClientsideFunction, Patch, ctx, State
 import plotly.express as px
-from dash_bootstrap_templates import load_figure_template
+from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO, template_from_url
 import plotly.io as pio
 import dash_bootstrap_components as dbc
+import dash_ag_grid as dag
+
+
 
 load_figure_template(["minty",  "minty_dark", 'cyborg', 'cyborg_dark'])
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -87,12 +90,7 @@ def getData(question_id):
 TOT_CNT = getData(5).shape[0]
 PAGESIZE = 10
 
-color_mode_switch = html.Span([
-        dbc.Label(className="fa fa-moon", html_for="color-mode-switch"),
-        dbc.Switch( id="color-mode-switch", value=False, className="d-inline-block ms-1", persistence=True),
-        dbc.Label(className="fa fa-sun", html_for="color-mode-switch"),
-    ]
-)
+
 
 figure_bar = px.bar(
     getData(6).melt(id_vars=[ "시점"], ignore_index=False),
@@ -127,20 +125,40 @@ carousel = dbc.Carousel(
 tab1_content = dbc.Card([
     dbc.CardBody([
         dcc.Graph(id='graph-1', figure=figure_bar)],
+        className="dbc"
     ),],
-    className="mt-3",
-    outline=True, color="danger"
+
+
 )
 
 tab2_content = dbc.Card([
     dbc.CardBody([
-        dcc.Graph(id='graph-2', figure=figure_line),]
+        dcc.Graph(id='graph-2', figure=figure_line),],
+        className="dbc"
     ),],
-    className="mt-3",
-    outline=True, color="danger"
+
+
 )
 
+columnDefs=[{"field": i} for i in getData(5).columns]
+grid = dag.AgGrid(
+    id='data_table',
+    rowData=getData(5).to_dict('records'),
+    columnDefs=columnDefs,
+    defaultColDef={"filter": True},
+    dashGridOptions={"animateRows": False, 'pagination':True},
+    style={"height": 600}
+
+)
 tab3_content = dbc.Card([
+    dbc.CardBody([
+        grid
+    ],
+    className="dbc dbc-ag-grid")
+],)
+
+
+"""tab3_content = dbc.Card([
     dbc.CardBody([
             dash_table.DataTable(
                 id='data_table',
@@ -163,6 +181,9 @@ tab3_content = dbc.Card([
         style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'}
     )
 ],outline=True, color="danger")
+"""
+
+
 
 
 tab4_content = dbc.Card([
@@ -174,8 +195,22 @@ tab4_content = dbc.Card([
 ],  style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'} )
 
 
-app = Dash(__name__, external_stylesheets=[ dbc.themes.BOOTSTRAP, dbc_css, dbc.icons.FONT_AWESOME])
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css, dbc.icons.FONT_AWESOME])
 
+
+color_mode_switch = ThemeSwitchAIO(
+    aio_id="theme",
+    icons={"left" :"fa fa-moon", "right" :"fa fa-sun"},
+    themes=[dbc.themes.MINTY, dbc.themes.CYBORG],
+)
+"""
+color_mode_switch = html.Span([
+        dbc.Label(className="fa fa-moon", html_for="color-mode-switch"),
+        dbc.Switch( id="color-mode-switch", value=True, className="d-inline-block ms-1", persistence=True),
+        dbc.Label(className="fa fa-sun", html_for="color-mode-switch"),
+    ]
+)
+"""
 
 app.layout = html.Div([
 
@@ -197,7 +232,8 @@ app.layout = html.Div([
              #   dbc.Tab(tab4_content, label='Carousel', tab_id="tab-4"),
             ],
             id="tabs",
-            active_tab="tab-1"
+            active_tab="tab-1",
+
         ),
 
         dcc.Interval(
@@ -211,7 +247,7 @@ app.layout = html.Div([
 )
 
 
-
+"""
 @app.callback(
     Output("data_table", "data"),
     Input('pagination', "active_page"),
@@ -221,7 +257,7 @@ def change_page(page_current):
     return getData(5).iloc[
            page*PAGESIZE:(page + 1)*PAGESIZE
            ].to_dict('records')
-
+"""
 
 @app.callback(
     output = [Output("graph-1", "figure"),
@@ -229,11 +265,13 @@ def change_page(page_current):
     inputs={
         'input_dict':{
             'interval': Input('interval-component', 'n_intervals'),
-            'switch_template': Input("color-mode-switch", "value"),
+          #  'switch_template': Input("color-mode-switch", "value"),
+            'switch_template':Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
         },
         'state_dict':{
             'current_tab': State('tabs', 'active_tab'),
-            'current_mode': State("color-mode-switch", "value")
+           # 'current_mode': State("color-mode-switch", "value"),
+            'current_mode': State(ThemeSwitchAIO.ids.switch("theme"), "value"),
         }
     },
     prevent_initial_call=True
@@ -262,7 +300,8 @@ app.clientside_callback(
         function_name='change_template'
     ),
     Output("root_container", "id"),
-    Input("color-mode-switch", "value"),
+    #Input("color-mode-switch", "value"),
+    Input(ThemeSwitchAIO.ids.switch("theme"), "value")
 )
 
 

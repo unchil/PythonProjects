@@ -14,26 +14,14 @@ color_mode_switch = html.Span([
 
 dropdown = html.Div(
     [
-        dbc.DropdownMenu(
-            [
-                dbc.DropdownMenuItem(
-                    "A button", id="dropdown-button1", n_clicks=0
-                ),
-                dbc.DropdownMenuItem(
-                    "Internal link", id="dropdown-button2", n_clicks=0
-                ),
-                dbc.DropdownMenuItem(
-                    "External Link", id="dropdown-button3", n_clicks=0
-                ),
-                dbc.DropdownMenuItem(
-                    "External relative", id="dropdown-button4", n_clicks=0
-                ),
-            ],
-            label="Menu",
-            id='dbc_dropdown',
+        dcc.Dropdown(
+            options=["A button", "Internal link", "External Link", "External relative"],
+            value="A button",
+            id='dcc_dropdown',
         ),
         html.P(id="item-clicks", className="mt-3"),
-    ]
+    ],
+    className="dbc",
 )
 
 
@@ -57,28 +45,10 @@ app.layout =  dbc.Container(
 
 @app.callback(
     Output("item-clicks", "children"),
-    Output("dbc_dropdown", "label"),
-    Input("dropdown-button1", "n_clicks"),
-    Input("dropdown-button2", "n_clicks"),
-    Input("dropdown-button3", "n_clicks"),
-    Input("dropdown-button4", "n_clicks"),
-    State("dropdown-button1", "children"),
-    State("dropdown-button2", "children"),
-    State("dropdown-button3", "children"),
-    State("dropdown-button4", "children"),
+    Input("dcc_dropdown", "value"),
 )
-def count_clicks(n1, n2, n3, n4, s1, s2, s3, s4):
-    id = ctx.triggered_id
-    if id == 'dropdown-button1':
-        return s1, s1
-    elif id == 'dropdown-button2':
-        return s2, s2
-    elif id == 'dropdown-button3':
-        return s3, s3
-    elif id == 'dropdown-button4':
-        return s4, s4
-    else:
-        return "Select Item", "Select Item"
+def count_clicks(value):
+    return value
 
 
 app.clientside_callback(
