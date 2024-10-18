@@ -6,7 +6,8 @@ import dash
 import pandas as pd
 from dash import Dash, dcc, html, dash_table, callback, Input, Output, ClientsideFunction, Patch, ctx, State
 import plotly.express as px
-from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO, template_from_url
+
+from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO
 import plotly.io as pio
 import dash_bootstrap_components as dbc
 import dash_ag_grid as dag
