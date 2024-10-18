@@ -141,17 +141,30 @@ tab2_content = dbc.Card([
 )
 
 columnDefs=[{"field": i} for i in getData(5).columns]
+columnDefs.insert(0, {"headerName": "Row ID", "valueGetter": {"function": "params.node.id"}})
+
 grid = dag.AgGrid(
     id='data_table',
     rowData=getData(5).to_dict('records'),
     columnDefs=columnDefs,
     defaultColDef={"filter": True},
     dashGridOptions={"animateRows": False, 'pagination':True},
+    csvExportParams={
+        "fileName": "서울소비자물가지수.csv",
+    },
     style={"height": 600}
 
 )
 tab3_content = dbc.Card([
     dbc.CardBody([
+        dbc.Button(
+            "Download CSV",
+            id="download-btn",
+            n_clicks=0,
+            outline=True,
+            color="info",
+            style={'margin-bottom':'20px'}
+        ),
         grid
     ],
     className="dbc dbc-ag-grid")
@@ -258,6 +271,18 @@ def change_page(page_current):
            page*PAGESIZE:(page + 1)*PAGESIZE
            ].to_dict('records')
 """
+
+@callback(
+    Output("data_table", "exportDataAsCsv"),
+    Input("download-btn", "n_clicks"),
+)
+def export_data_as_csv(n_clicks):
+    if n_clicks:
+        return True
+    return False
+
+
+
 
 @app.callback(
     output = [Output("graph-1", "figure"),
