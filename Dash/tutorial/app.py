@@ -317,7 +317,7 @@ def update_chart(input_dict, state_dict):
     else:
         return no_update_result
 
-"a"
+"b"
 
 app.clientside_callback(
     ClientsideFunction(
