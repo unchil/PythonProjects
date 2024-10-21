@@ -7,7 +7,7 @@ import pandas as pd
 from dash import Dash, dcc, html, dash_table, callback, Input, Output, ClientsideFunction, Patch, ctx, State
 import plotly.express as px
 
-from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO
+from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO, ThemeChangerAIO,template_from_url
 import plotly.io as pio
 import dash_bootstrap_components as dbc
 import dash_ag_grid as dag
@@ -21,6 +21,16 @@ def update_template(value):
     figure_1 = Patch()
     figure_2 = Patch()
     template = pio.templates["minty"] if value else pio.templates["minty_dark"]
+    figure_1["layout"]["template"] = template
+    figure_2["layout"]["template"] = template
+    return [figure_1, figure_2]
+
+
+def change_template(value):
+    figure_1 = Patch()
+    figure_2 = Patch()
+
+    template = pio.templates[template_from_url(value)]
     figure_1["layout"]["template"] = template
     figure_2["layout"]["template"] = template
     return [figure_1, figure_2]
@@ -149,13 +159,19 @@ grid = dag.AgGrid(
     rowData=getData(5).to_dict('records'),
     columnDefs=columnDefs,
     defaultColDef={"filter": True},
-    dashGridOptions={"animateRows": False, 'pagination':True},
+    dashGridOptions={"animateRows": False,
+                     'pagination':True,
+                     "suppressPaginationPanel": False,
+              #       "suppressScrollOnNewData": True,
+                     },
     csvExportParams={
         "fileName": "서울소비자물가지수.csv",
     },
-    style={"height": 600}
+    style={"height": 400}
 
 )
+
+"""
 tab3_content = dbc.Card([
     dbc.CardBody([
         dbc.Button(
@@ -170,36 +186,70 @@ tab3_content = dbc.Card([
     ],
     className="dbc dbc-ag-grid")
 ],)
-
-
-"""tab3_content = dbc.Card([
-    dbc.CardBody([
-            dash_table.DataTable(
-                id='data_table',
-                data=getData(5).to_dict('records'),
-                page_current=0,
-                page_size=PAGESIZE,
-                style_table={'overflowX': 'scroll'},
-            ),],
-            className="dbc"
-        ),
-    dbc.CardFooter( [
-        dbc.Pagination(
-            id='pagination',
-            max_value=TOT_CNT/PAGESIZE,
-            active_page=1,
-            first_last=True,
-            previous_next=True,
-            fully_expanded=False
-        )] ,
-        style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'}
-    )
-],outline=True, color="danger")
 """
 
 
+tab3_content = dbc.Card(
+    [
+        dbc.CardBody([
+                dbc.Button(
+                    "Download CSV",
+                    id="download-btn",
+                    n_clicks=0,
+                    outline=True,
+                    color="info",
+                    style={'margin-bottom':'20px'}
+                ),
+                grid
+            ],
+            className="dbc dbc-ag-grid"
+        ),
+
+        dbc.CardFooter(
+            [
+                dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Page Size:", size='sm'),
+                            dbc.Select(
+                                    id="input-page-size",
+                                    options=[
+                                        {"label": "5", "value": 5},
+                                        {"label": "10", "value": 10},
+                                        {"label": "20", "value": 20},
+                                    ],
+                                    value=10,
+                                    size='sm'
+                                ),
+
+                        ],
+                        width=1),
+
+                        dbc.Col(
+                            dbc.Pagination(
+                                id='pagination',
+                                max_value=TOT_CNT/PAGESIZE,
+                                active_page=1,
+                                first_last=True,
+                                previous_next=True,
+                                fully_expanded=False,
+                            ),
+                            width={ "offset": 3},
+                            align="end",
+                        )
+                    ],
 
 
+                ),
+
+            ],
+
+        )
+    ],
+    className="pad-row",
+)
+
+
+"""
 tab4_content = dbc.Card([
     dbc.CardBody([
         carousel
@@ -207,7 +257,7 @@ tab4_content = dbc.Card([
         className="dbc"
     ),
 ],  style={'margin':'auto', 'background-color':'rgba(0, 0, 0, 0)'} )
-
+"""
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css, dbc.icons.FONT_AWESOME])
 
@@ -226,6 +276,8 @@ color_mode_switch = html.Span([
 )
 """
 
+theme_change = ThemeChangerAIO(aio_id="theme")
+
 app.layout = html.Div([
 
         html.Div(
@@ -237,6 +289,8 @@ app.layout = html.Div([
         ),
 
         color_mode_switch,
+
+        theme_change ,
 
         dbc.Tabs(
             [
@@ -261,17 +315,41 @@ app.layout = html.Div([
 )
 
 
-"""
 @app.callback(
-    Output("data_table", "data"),
+    Output("data_table", "dashGridOptions"),
+    Input("input-page-size", "value"),
+    State("data_table", "dashGridOptions"),
+)
+def update_page_size(page_size, grid_options):
+    page_size = 1 if page_size is None else page_size
+    grid_options["paginationPageSize"] = page_size
+    return grid_options
+
+
+@app.callback(
+    Output("pagination", "max_value"),
+  #  Output("pagination", "active_page"),
+    Input("data_table", "paginationInfo"),
+)
+def update_pagination_control(pagination_info):
+    if pagination_info is None:
+        return dash.no_update
+    return pagination_info["totalPages"] #, pagination_info["currentPage"]
+
+
+
+@app.callback(
+    Output("data_table", "paginationGoTo"),
     Input('pagination', "active_page"),
+    prevent_initial_call=True
 )
 def change_page(page_current):
-    page = page_current - 1
-    return getData(5).iloc[
-           page*PAGESIZE:(page + 1)*PAGESIZE
-           ].to_dict('records')
-"""
+    if page_current is None or page_current == 1:
+        return "first"
+    # grid pagination starts at zero
+    return page_current - 1
+
+
 
 @callback(
     Output("data_table", "exportDataAsCsv"),
@@ -293,6 +371,7 @@ def export_data_as_csv(n_clicks):
             'interval': Input('interval-component', 'n_intervals'),
           #  'switch_template': Input("color-mode-switch", "value"),
             'switch_template':Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
+            'change_template':Input(ThemeChangerAIO.ids.radio("theme"), "value"),
         },
         'state_dict':{
             'current_tab': State('tabs', 'active_tab'),
@@ -310,6 +389,8 @@ def update_chart(input_dict, state_dict):
 
     if inputs.switch_template.triggered:
         return update_template(inputs.switch_template.value)
+    elif inputs.change_template.triggered:
+        return change_template(inputs.change_template.value)
     elif inputs.interval.triggered:
         if states.current_tab.value == 'tab-2':
             return[dash.no_update, make_figure(inputs.interval.value, states.current_mode.value)]
@@ -318,7 +399,9 @@ def update_chart(input_dict, state_dict):
     else:
         return no_update_result
 
-"b"
+
+
+
 
 app.clientside_callback(
     ClientsideFunction(
@@ -334,4 +417,4 @@ app.clientside_callback(
 
 
 if __name__ == '__main__':
-    app.run(port=7777, debug=False)
+    app.run(port=8888, debug=False)
