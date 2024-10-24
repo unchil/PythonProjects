@@ -151,7 +151,7 @@ tab2_content = dbc.Card([
 
 )
 
-columnDefs=[{"field": i} for i in getData(5).columns]
+columnDefs=[{"field": i, "tooltipField": i, "headerTooltip": f"This is the {i} column"} for i in getData(5).columns]
 columnDefs.insert(0, {"headerName": "Row ID", "valueGetter": {"function": "params.node.id"}})
 
 grid = dag.AgGrid(
@@ -162,12 +162,18 @@ grid = dag.AgGrid(
     dashGridOptions={"animateRows": False,
                      'pagination':True,
                      "suppressPaginationPanel": False,
-              #       "suppressScrollOnNewData": True,
+                     "tooltipShowDelay":0,  # Makes tooltip show immediately.  Default 2000ms
+                     "tooltipHideDelay": 3000, # Hides tooltip after 3000ms
+                     "tooltipInteraction": True, # Won't hide when hover on toolip.  Can select and copy content.
+                     # "tooltipMouseTrack": True # tooltips follows the cursor - don't use when tooltipInteraction = True
+                     "popupParent": {"function": "setBody()"} # Allows tooltip content to extend beyond the grid boundary
+
                      },
     csvExportParams={
         "fileName": "서울소비자물가지수.csv",
     },
-    style={"height": 400}
+    style={"height": 400},
+  #  className="ag-theme-quartz",
 
 )
 
@@ -245,7 +251,7 @@ tab3_content = dbc.Card(
 
         )
     ],
-    className="pad-row",
+
 )
 
 
@@ -365,7 +371,8 @@ def export_data_as_csv(n_clicks):
 
 @app.callback(
     output = [Output("graph-1", "figure"),
-              Output("graph-2", "figure")],
+              Output("graph-2", "figure"),
+],
     inputs={
         'input_dict':{
             'interval': Input('interval-component', 'n_intervals'),
@@ -400,6 +407,17 @@ def update_chart(input_dict, state_dict):
         return no_update_result
 
 
+
+"""
+@app.callback(
+    Output('data_table', 'className'),
+    Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
+)
+def change_theme(value):
+    if value:
+        return "ag-theme-quartz"
+    return "ag-theme-quartz-dark"
+"""
 
 
 

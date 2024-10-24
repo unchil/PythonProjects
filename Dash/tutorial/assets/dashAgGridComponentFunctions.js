@@ -1,7 +1,9 @@
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 dagcomponentfuncs.DCC_GraphClickData = function (props) {
+
     const {setData} = props;
+
     function setProps() {
         const graphProps = arguments[0];
         if (graphProps['clickData']) {
@@ -14,4 +16,13 @@ dagcomponentfuncs.DCC_GraphClickData = function (props) {
         style: {height: '100%'},
         config: {displayModeBar: false},
     });
+};
+
+
+
+dagcomponentfuncs.CustomTooltipGraph = function (props) {
+    return React.createElement(
+        window.dash_core_components.Graph, {
+            figure: props.value,
+        })
 };
