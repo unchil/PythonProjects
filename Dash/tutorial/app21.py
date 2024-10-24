@@ -46,7 +46,7 @@ blurb = (
 
 color_mode_switch = ThemeSwitchAIO(
     aio_id="theme",
-    themes=[dbc.themes.MINTY, dbc.themes.CYBORG],
+    themes=[dbc.themes.MINTY, dbc.themes.DARKLY],
 )
 
 
