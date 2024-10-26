@@ -29,7 +29,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
         change_template: function(switchOn){
            document.documentElement.setAttribute('data-bs-theme', switchOn ? 'light' : 'dark');
-
+         //  document.querySelector('body').style.backgroundColor = switchOn ? 'white':'rgb(25, 25, 25)' ;
            return window.dash_clientside.no_update
         },
 
