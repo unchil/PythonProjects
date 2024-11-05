@@ -14,9 +14,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from supplydemand.views import FiveMinuteSD
+
+
+
+supplydemand_patterns=([
+    path("one_hr/", FiveMinuteSD.getLast1HR, name="one_hr"),
+    path("two_hr/", FiveMinuteSD.getLast2HR, name="two_hr"),
+    path("one_day/", FiveMinuteSD.getLast1Day, name="one_day"),
+], "supplydemand" )
+
 
 urlpatterns = [
+    path('SD/', include(supplydemand_patterns) ),
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework') ),
 ]
+
