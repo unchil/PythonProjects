@@ -26,6 +26,7 @@ from supplydemand.views import FiveMinuteSD
 supplydemand_patterns=([
     path("one_hr/", FiveMinuteSD.getLast1HR, name="one_hr"),
     path("two_hr/", FiveMinuteSD.getLast2HR, name="two_hr"),
+    path("current_one_day/", FiveMinuteSD.getCurrent1Day, name="current_one_day"),
     path("one_day/", FiveMinuteSD.getLast1Day, name="one_day"),
 ], "supplydemand" )
 

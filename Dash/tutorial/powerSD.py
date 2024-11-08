@@ -21,7 +21,7 @@ columns = ['기준일시', '공급능력', '현재수요', '예측수요', '공�
 df = pd.read_json(url)
 df.columns = columns
 
-option_presentation_data_range = ['Last1Hr', 'Last2Hr', 'Last1DayBefore']
+option_presentation_data_range = ['Current1Hr', 'Current2Hr', 'Current1Day', 'Last1DayBefore']
 
 
 def change_data(api_url, current_mode):
@@ -32,10 +32,12 @@ def change_data(api_url, current_mode):
 
 def refresh_data(data_range, current_mode):
     match data_range:
-        case 'Last1Hr':
+        case 'Current1Hr':
             return change_data('http://127.0.0.1:8000/SD/one_hr/', current_mode)
-        case 'Last2Hr':
+        case 'Current2Hr':
             return change_data('http://127.0.0.1:8000/SD/two_hr/', current_mode)
+        case 'Current1Day':
+            return change_data('http://127.0.0.1:8000/SD/current_one_day/', current_mode)
         case 'Last1DayBefore':
             return change_data('http://127.0.0.1:8000/SD/one_day/', current_mode)
         case _:
@@ -158,14 +160,15 @@ def make_figure(df_data, value):
         data,
         x=data.index,
         y=data.columns,
-        markers=True,
+        markers=False,
     )
     fig.update_layout(
         title="현재 전력 수급 현황",
         xaxis_title='수집시간',
         yaxis_title='전력량(MW)',
         yaxis_range=[0, 120000],
-        legend=dict(title='항목', y=0.99, x=0.99, yanchor='top', xanchor='right'),
+       # legend=dict(title='항목', y=0.99, x=0.99, yanchor='top', xanchor='right'),
+        legend=dict(title='항목'),
         template='minty' if value else 'minty_dark'
     )
     return fig
@@ -178,14 +181,15 @@ def make_figure_rate(df_data, value):
         data,
         x=data.index,
         y=data.columns,
-        markers=True,
+        markers=False,
     )
     fig.update_layout(
         title="현재 전력 수급 예비율",
         xaxis_title='수집시간',
         yaxis_title='예비율(%)',
         yaxis_range=[0, 100],
-        legend=dict(title='항목', y=0.99, x=0.99, yanchor='top', xanchor='right'),
+        #legend=dict(title='항목', y=0.99, x=0.99, yanchor='top', xanchor='right'),
+        legend=dict(title='항목'),
         template='minty' if value else 'minty_dark'
     )
     return fig
@@ -244,37 +248,34 @@ app.layout = dbc.Container([
                 ),
 
                 html.Div([
-                    dcc.Graph(
-                        id="chart_supplyDemand",
-                        figure=make_figure(df, True),
-                        style={'flex-basis': '50%'}
-                    ),
-
-                    dcc.Graph(
-                        id="chart_reserveRate",
-                        figure=make_figure_rate(df, True),
-                        style={'flex-basis': '48%'}
-                    ),
-
-
-                ],
-                    style={
-                        'display': 'flex',
-                        'flexDirection': 'row',
-                        'justify-content': 'space-around',
-                    },
-                ),
-
-                html.Div([
                     dcc.Graph( id='paper_fig', figure=make_figure_paper(df, True), style={'flex-basis': '70%'}),
                 ],
                     style={
                         'display': 'flex',
                         'flexDirection': 'row',
                         'justify-content': 'center',
-                        'flex-basis': '25%'
+                     #   'flex-basis': '25%'
                     },
                 ),
+
+
+
+                dcc.Graph(
+                    id="chart_supplyDemand",
+                    figure=make_figure(df, True),
+                  #  style={'flex-basis': '50%'}
+                ),
+
+                dcc.Graph(
+                    id="chart_reserveRate",
+                    figure=make_figure_rate(df, True),
+               #     style={'flex-basis': '48%'}
+                ),
+
+
+
+
+
 
 
 
@@ -296,7 +297,7 @@ app.layout = dbc.Container([
             style={
                 'display': 'flex',
                 'flexDirection': 'column',
-                'height': '1600px',
+                'height': '2400px',
                 'justify-content': 'space-around',
             },
             className="dbc",
