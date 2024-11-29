@@ -1,17 +1,2 @@
-/.devcontainer/
-/.idea/
-/.ipynb_checkpoints/
-
-/Dash/.ipynb_checkpoints/
-/Dash/tutorial/.ipynb_checkpoints/
-
-
-/DeepLearning/timeSerise/.ipynb_checkpoints/
-/DeepLearning/timeSerise/cache/
-/DeepLearning/timeSerise/data/
-/DeepLearning/timeSerise/lightning_logs/
-
-
 /Django/power_exchange/scheduleD/
-/Django/power_exchange/supplydemand/migrations/
 
