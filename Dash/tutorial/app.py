@@ -77,7 +77,8 @@ def make_figure(n, value):
 
 def getData(question_id):
 
-    df_data = pd.read_csv("../../chartsite/static/data/소비자물가지수(지출목적별)_20240803150211.csv")
+    df_data = pd.read_csv(
+        "../../Django/chartsite/static/data/소비자물가지수(지출목적별)_20240803150211.csv")
     df_data.index = pd.date_range('2018-01-01', '2024-07-01',freq='ME' )
 
     match question_id:
