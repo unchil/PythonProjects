@@ -77,4 +77,4 @@ def generated_px_figure_json(data):
 
 
 if __name__ == '__main__':
-    app.run(port=7777, debug=False)
+    app.run(port=7788, debug=False)

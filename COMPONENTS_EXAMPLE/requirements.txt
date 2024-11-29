@@ -1,6 +1,0 @@
-streamlit-aggrid
-streamlit-plotly-events
-streamlit-lottie
-streamlit-pandas-profiling
-streamlit-folium
-streamlit-extras

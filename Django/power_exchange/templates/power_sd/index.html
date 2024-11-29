@@ -1,0 +1,19 @@
+{% load static %}
+{% load plotly_dash %}
+
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% plotly_header %}
+</head>
+<body>
+{%plotly_app name="PowerSD" ratio=1 %}
+</body>
+{% plotly_footer %}
+
+</html>
+
+
+
+
+

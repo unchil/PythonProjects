@@ -435,4 +435,4 @@ app.clientside_callback(
 
 
 if __name__ == '__main__':
-    app.run(port=8888, debug=False)
+    app.run(port=7777, debug=False)

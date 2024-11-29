@@ -105,4 +105,4 @@ def update_graph(continent, country,  item):
 
 
 if __name__ == "__main__":
-    app.run(port=7777, debug=False)
+    app.run(port=7788, debug=False)
