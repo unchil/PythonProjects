@@ -1,5 +1,5 @@
-/power_exchange/scheduleD/
-/power_exchange/supplydemand/migrations/
+
+
 /.devcontainer/
 /.idea/
 /.ipynb_checkpoints/
@@ -10,3 +10,4 @@
 /DeepLearning/timeSerise/data/
 /DeepLearning/timeSerise/lightning_logs/
 /Django/power_exchange/scheduleD/
+/Django/power_exchange/supplydemand/migrations/
