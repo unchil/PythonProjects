@@ -1,2 +1,11 @@
 /power_exchange/scheduleD/
 /power_exchange/supplydemand/migrations/
+/.devcontainer/
+/.idea/
+/.ipynb_checkpoints/
+/Dash/.ipynb_checkpoints/
+/Dash/tutorial/.ipynb_checkpoints/
+/DeepLearning/timeSerise/.ipynb_checkpoints/
+/DeepLearning/timeSerise/cache/
+/DeepLearning/timeSerise/data/
+/DeepLearning/timeSerise/lightning_logs/
