@@ -1,4 +1,4 @@
 /Django/power_exchange/scheduleD/
-
-/DeepLearning/timeSerise/lightning_logs/
 /.idea/
+/DeepLearning/timeSerise/lightning_logs/
+/Streamlit/.streamlit/secrets.toml
