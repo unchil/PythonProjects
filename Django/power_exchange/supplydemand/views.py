@@ -8,6 +8,8 @@ from rest_framework.renderers import JSONRenderer
 from .serializers import FiveMinuteSDSerializer
 from .models import FiveMSupplyDemand, DayFiveMinSupplyDemand
 
+from .forms import FiveMSupplyDemandForm
+
 # Create your views here.
 
 class FiveMinuteSD(APIView):
@@ -40,3 +42,16 @@ class FiveMinuteSD(APIView):
         #queryset.reverse()
         serializer = FiveMinuteSDSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+def fiveMinuteSD_create(request):
+    if request.method == 'POST':
+        form = FiveMSupplyDemandForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.create_date = datetime.timezone.now()
+    else:
+        form = FiveMSupplyDemandForm()
+
+
+    return render(request, "supplydemand/sd_form.html", {'form':form} )

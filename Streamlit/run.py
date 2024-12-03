@@ -1,6 +1,6 @@
 from streamlit.web.bootstrap import run
 
-dirPath='./database_example'
+dirPath='./job_application_example'
 
 fileName='streamlit_app.py'
 

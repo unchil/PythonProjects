@@ -2,3 +2,4 @@
 /.idea/
 /DeepLearning/timeSerise/lightning_logs/
 /Streamlit/.streamlit/secrets.toml
+/Jupyter/.ipynb_checkpoints/

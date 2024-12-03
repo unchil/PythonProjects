@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from supplydemand.views import FiveMinuteSD
+import supplydemand.views as views_supplydemand
 
 #from power_sd import views as power_sd_views
 #from power_sd import app
@@ -34,6 +35,8 @@ supplydemand_patterns=([
     path("two_hr/", FiveMinuteSD.getLast2HR, name="two_hr"),
     path("current_one_day/", FiveMinuteSD.getCurrent1Day, name="current_one_day"),
     path("one_day/", FiveMinuteSD.getLast1Day, name="one_day"),
+    path('form_sd/', views_supplydemand.fiveMinuteSD_create, name='form_sd' ),
+
 ], "supplydemand" )
 
 
